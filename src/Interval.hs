@@ -2,6 +2,17 @@
 
 module Interval where
 
+
+data Mode
+  = Ionian
+  | Dorian
+  | Phrygian
+  | Lydian
+  | Mixolydian
+  | Aeolian
+  | Locrian
+  deriving (Eq, Ord, Show, Enum, Bounded)
+
 data Note = A | A' | B | C | C' | D | D' | E | F | F' | G | G'
   deriving (Eq, Ord, Show, Enum, Bounded)
 
@@ -22,12 +33,18 @@ clamp12 x | x >= 12          = clamp12 $ x - 12
 toInterval :: Integer -> Interval
 toInterval = toEnum . clamp12 . fromIntegral
 
+mod12 :: (Enum a, Enum b, Enum c) => (Int -> Int -> Int) -> a -> b -> c
+mod12 f a b = toEnum $ clamp12 $ fromEnum a `f` fromEnum b
+
 iMinus :: Note -> Note -> Interval
-iMinus a b = toEnum $ clamp12 $ fromEnum a - fromEnum b
+iMinus = mod12 (-)
 
 iAdd :: Interval -> Interval -> Interval
-iAdd a b = toEnum $ clamp12 $ fromEnum a + fromEnum b
+iAdd = mod12 (+)
 
 iPlus :: Note -> Interval -> Note
-iPlus a b = toEnum $ clamp12 $ fromEnum a + fromEnum b
+iPlus = mod12 (+)
 
+modeOf :: Mode -> [a] -> [a]
+modeOf _ [] = []
+modeOf n xs = zipWith const (drop (fromEnum n) (cycle xs)) xs

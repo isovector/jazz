@@ -1,11 +1,8 @@
-{-# LANGUAGE ScopedTypeVariables #-}
-
 module Main where
 
-import  Interval
+import Interval
 
 main = undefined
-
 
 circleOfFifths :: [Note]
 circleOfFifths = iterate (`iPlus` Perf5) C

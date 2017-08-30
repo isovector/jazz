@@ -25,6 +25,13 @@ pattern Gb = F'
 data Interval = Uni | Min2 | Maj2 | Min3 | Maj3 | Perf4 | Tri | Perf5 | Min6 | Maj6 | Min7 | Maj7
   deriving (Eq, Ord, Show, Enum, Bounded)
 
+pattern Oct = Uni
+pattern Min9 = Min2
+pattern Maj9 = Maj2
+pattern Perf11 = Perf4
+pattern Min13 = Min6
+pattern Maj13 = Maj6
+
 clamp12 :: Int -> Int
 clamp12 x | x >= 0 && x < 12 = x
 clamp12 x | x < 0            = clamp12 $ x + 12

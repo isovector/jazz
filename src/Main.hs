@@ -1,7 +1,10 @@
 module Main where
 
 import Interval
-import Data.Foldable (toList)
+import Debug.Trace
+
+showTrace :: Show a => a -> a
+showTrace = trace =<< show
 
 main = undefined
 
@@ -9,7 +12,7 @@ circleOfFifths :: [Note]
 circleOfFifths = iterate (`iPlus` Perf5) C
 
 intsFromNotes :: [Note] -> [Interval]
-intsFromNotes (tonic : others) = Uni : fmap (\x -> x `iMinus` tonic) others
+intsFromNotes notes = fmap (\x -> x `iMinus` head notes) notes
 
 major7 :: [Interval]
 major7 = intsFromNotes [ C, E, G, B ]
@@ -63,7 +66,4 @@ classify ints
 
 promote :: Note -> [Interval] -> [Scale]
 promote n ints = filter (containsAll (transpose n ints) . getNotes) allScales
-
-containsAll :: (Eq a, Foldable t) => [a] -> t a -> Bool
-containsAll as ta = all (`elem` toList ta) as
 

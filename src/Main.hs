@@ -1,7 +1,9 @@
 module Main where
 
 import Interval
+import Data.Bool (bool)
 import Debug.Trace
+import Data.List (intercalate)
 
 showTrace :: Show a => a -> a
 showTrace = trace =<< show
@@ -66,4 +68,34 @@ classify ints
 
 promote :: Note -> [Interval] -> [Scale]
 promote n ints = filter (containsAll (transpose n ints) . getNotes) allScales
+
+chord :: [Note] -> String
+chord ns = ('(' :)
+         . (++ "/4)")
+         . fmap (\x -> bool x '@' $ x == 'b')
+         . intercalate "-"
+         . fmap (nameOfNote $ head ns)
+         $ intsFromNotes ns
+
+ascChord :: [Note] -> String
+ascChord ns = ('(' :)
+            . (++ ")")
+            . fmap (\x -> bool x '@' $ x == 'b')
+            . fmap (\x -> bool x '#' $ x == '\'')
+            . intercalate "."
+            . fmap (asc $ head ns)
+            . zip ns
+            $ intsFromNotes ns
+  where
+    asc :: Note -> (Note, Interval) -> String
+    asc r (n, i) = show n ++ bool "/4" "/5" (r > n)
+
+
+practice2'5'1 :: String
+practice2'5'1 = concat $ do
+  each <- gather 2 $ do
+    note <- reverse $ take 12 circleOfFifths
+    pure . (++ "^3^") . concat . fmap (ascChord . transpose note) $ progression2'5'1
+
+  pure $ "stave\nnotes " ++  concat each ++ "\n\n"
 

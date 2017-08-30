@@ -1,7 +1,9 @@
-{-# LANGUAGE PatternSynonyms #-}
+{-# LANGUAGE PatternSynonyms     #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module Interval where
 
+import Data.Bool (bool)
 import Data.Foldable (toList)
 
 data Mode
@@ -14,7 +16,7 @@ data Mode
   | Locrian
   deriving (Eq, Ord, Show, Enum, Bounded)
 
-data Note = A | A' | B | C | C' | D | D' | E | F | F' | G | G'
+data Note = C | C' | D | D' | E | F | F' | G | G'| A | A' | B
   deriving (Eq, Ord, Show, Enum, Bounded, Read)
 
 pattern Ab = G'
@@ -91,6 +93,7 @@ intervalSize Min7  = 7
 intervalSize Maj7  = 7
 
 nameOfNote :: Note -> Interval -> String
+nameOfNote a Uni = fmap (\x -> bool x '#' $ x == '\'') $ show a
 nameOfNote a i =
   let b = iPlus a i
       base = baseName a
@@ -105,4 +108,12 @@ nameOfNote a i =
       delta = f newbase - f b
       add = replicate (abs delta) $ if delta > 0 then 'b' else '#'
    in show newbase ++ add
+
+gather :: forall a. Int -> [a] -> [[a]]
+gather n = go n n []
+  where
+    go :: Int -> Int -> [a] -> [a] -> [[a]]
+    go _ _ c [] = [c]
+    go t 0 c as = c : go t t [] as
+    go t n c (a : as) = go t (n - 1) (c ++ [a]) as
 

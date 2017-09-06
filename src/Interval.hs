@@ -6,6 +6,16 @@ module Interval where
 import Data.Bool (bool)
 import Data.Foldable (toList)
 
+data Diff a = Diff
+  { diffBefore :: a
+  , diffAfter :: a
+  }
+
+instance (Eq a, Show a) => Show (Diff a) where
+  show (Diff a b) | a == b = ""
+                  | otherwise = show a ++ " => " ++ show b
+
+
 data Mode
   = Ionian
   | Dorian

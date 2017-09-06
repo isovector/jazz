@@ -99,3 +99,12 @@ practice2'5'1 = concat $ do
 
   pure $ "stave\nnotes " ++  concat each ++ "\n\n"
 
+
+modeRules :: Mode -> [Diff Interval]
+modeRules m = fmap (uncurry Diff)
+            . filter (uncurry (/=))
+            . zip (intsFromNotes $ transpose C major)
+            . intsFromNotes
+            . transpose C
+            $ modeOf m major
+

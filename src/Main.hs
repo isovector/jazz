@@ -1,5 +1,6 @@
 module Main where
 
+import Control.Monad (guard)
 import Interval
 import Data.Bool (bool)
 import Debug.Trace
@@ -107,4 +108,21 @@ modeRules m = fmap (uncurry Diff)
             . intsFromNotes
             . transpose C
             $ modeOf m major
+
+
+fingeringOf :: Hand -> [Note] -> [Int]
+fingeringOf hand notes = head $ do
+  fingers <- handed reverse id hand <$> patterns
+  guard . not
+        . or
+        . fmap (\(n, f) -> isBlack n && f == 1)
+        . zip notes
+        $ fingers
+  pure fingers
+
+
+  where
+    patterns = [ [1..3] ++ [1..5]
+               , [1..4] ++ [1..4]
+               ]
 

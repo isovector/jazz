@@ -16,6 +16,15 @@ instance (Eq a, Show a) => Show (Diff a) where
                   | otherwise = show a ++ " => " ++ show b
 
 
+data Hand
+  = LeftHand
+  | RightHand
+  deriving (Eq, Ord, Show, Enum, Bounded, Read)
+
+handed :: a -> a -> Hand -> a
+handed l _ LeftHand  = l
+handed _ r RightHand = r
+
 data Mode
   = Ionian
   | Dorian
@@ -101,6 +110,14 @@ intervalSize Min6  = 6
 intervalSize Maj6  = 6
 intervalSize Min7  = 7
 intervalSize Maj7  = 7
+
+isBlack :: Note -> Bool
+isBlack A' = True
+isBlack C' = True
+isBlack D' = True
+isBlack F' = True
+isBlack G' = True
+isBlack _ = False
 
 nameOfNote :: Note -> Interval -> String
 nameOfNote a Uni = fmap (\x -> bool x '#' $ x == '\'') $ show a

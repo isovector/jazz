@@ -5,7 +5,6 @@ module Interval where
 
 import Data.Bool (bool)
 import Data.Foldable (toList)
-
 data Diff a = Diff
   { diffBefore :: a
   , diffAfter :: a
